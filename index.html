@@ -2,27 +2,46 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Sequência de Cores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Cores</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       background: #111;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      color: white;
-      font-family: sans-serif;
-      padding-top: 30px;
+      min-height: 100vh;
+      padding-top: 20px;
+    }
+
+    h1 {
+      font-size: 6vw;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #cores-container {
+      display: grid;
+      grid-template-columns: repeat(2, 45vw);
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 20px;
     }
 
     .cor {
-      width: 150px;
-      height: 150px;
-      margin: 15px;
-      border-radius: 20px;
+      width: 100%;
+      height: 30vw;
+      border-radius: 15px;
       opacity: 0.4;
-      transition: 0.3s;
+      transition: opacity 0.2s;
     }
 
     #verde   { background: green; }
@@ -30,36 +49,33 @@
     #azul    { background: blue; }
     #amarelo { background: yellow; }
 
-    #start {
-      padding: 10px 30px;
-      font-size: 18px;
-      margin-top: 20px;
+    button {
+      padding: 15px 30px;
+      font-size: 5vw;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: #333;
+      color: white;
       cursor: pointer;
     }
 
     #status {
-      margin-top: 15px;
-      font-size: 20px;
-    }
-
-    #cores-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+      font-size: 5vw;
+      margin-bottom: 15px;
     }
 
     #sequenciaVisual {
       display: flex;
       gap: 10px;
-      margin-top: 15px;
       flex-wrap: wrap;
       justify-content: center;
+      padding: 10px;
     }
 
     .bolinha {
-      width: 30px;
-      height: 30px;
+      width: 6vw;
+      height: 6vw;
       border-radius: 50%;
       border: 2px solid white;
     }
@@ -72,7 +88,8 @@
 </head>
 <body>
 
-  <h1>Genius</h1>
+  <h1>Sequência de Cores</h1>
+
   <div id="cores-container">
     <div id="verde" class="cor"></div>
     <div id="vermelho" class="cor"></div>
@@ -81,7 +98,9 @@
   </div>
 
   <button id="start">Iniciar</button>
-  <div id="status"></div>
+  <button id="stop">Terminar</button>
+
+  <div id="status">Toque em "Iniciar"</div>
   <div id="sequenciaVisual"></div>
 
   <script>
@@ -89,8 +108,12 @@
 
     let sequencia = [];
     let rodada = 0;
-    let intervaloEntreRodadas = 5000; // tempo entre rodadas (ms)
-    let tempoPorCor = 800;            // tempo que cada cor fica acesa
+    let intervaloEntreRodadas = 3000;
+    let tempoPorCor = 800;
+
+    let intervaloAtivo = null;
+    let timeoutRodada = null;
+    let jogoAtivo = false;
 
     function piscar(cor) {
       const el = document.getElementById(cor);
@@ -100,7 +123,7 @@
 
     function mostrarBolinhas() {
       const visual = document.getElementById('sequenciaVisual');
-      visual.innerHTML = ''; // limpa antes de mostrar nova
+      visual.innerHTML = '';
       sequencia.forEach(cor => {
         const bolinha = document.createElement('div');
         bolinha.classList.add('bolinha', cor);
@@ -111,30 +134,50 @@
     function mostrarSequencia() {
       document.getElementById('status').innerText = `Rodada ${rodada}`;
       let i = 0;
-      const intervalo = setInterval(() => {
+      intervaloAtivo = setInterval(() => {
         piscar(sequencia[i]);
         i++;
         if (i >= sequencia.length) {
-          clearInterval(intervalo);
+          clearInterval(intervaloAtivo);
           mostrarBolinhas();
-          setTimeout(novaRodada, intervaloEntreRodadas);
+          timeoutRodada = setTimeout(novaRodada, intervaloEntreRodadas);
         }
       }, tempoPorCor);
     }
 
     function novaRodada() {
-      rodada++; // incrementa rodada aqui apenas
+      rodada++;
       const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
       sequencia.push(corAleatoria);
       mostrarSequencia();
     }
 
-    document.getElementById('start').addEventListener('click', () => {
+    function resetarJogo() {
+      // Cancela timers ativos
+      clearInterval(intervaloAtivo);
+      clearTimeout(timeoutRodada);
+      intervaloAtivo = null;
+      timeoutRodada = null;
+
+      // Limpa tudo
       rodada = 0;
       sequencia = [];
+      jogoAtivo = false;
+
+      document.getElementById('status').innerText = 'Toque em "Iniciar"';
       document.getElementById('sequenciaVisual').innerHTML = '';
+    }
+
+    document.getElementById('start').addEventListener('click', () => {
+      resetarJogo(); // garante que esteja limpo
+      jogoAtivo = true;
       novaRodada();
     });
+
+    document.getElementById('stop').addEventListener('click', () => {
+      resetarJogo();
+    });
   </script>
+
 </body>
 </html>
