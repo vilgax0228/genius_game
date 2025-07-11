@@ -40,20 +40,20 @@
       width: 100%;
       height: 30vw;
       border-radius: 15px;
-      filter: brightness(50%);
-      transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+      opacity: 0.4;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
     }
 
     .cor.ativa {
-      filter: brightness(100%);
+      opacity: 1;
       transform: scale(1.05);
-      box-shadow: 0 0 20px white;
+      box-shadow: 0 0 25px white;
     }
 
-    #verde   { background: #22cc00; }  /* Verde vibrante */
+    #verde   { background: #00cc44; }  /* verde forte */
     #vermelho{ background: red; }
     #azul    { background: blue; }
-    #amarelo { background: #e2e600; }  /* Amarelo com contraste */
+    #amarelo { background: #ffb700; }  /* amarelo forte */
 
     button {
       padding: 15px 30px;
@@ -83,18 +83,18 @@
       width: 6vw;
       height: 6vw;
       border-radius: 50%;
-      border: 2px solid white;
+      border: 3px solid #222; /* borda escura para destaque */
     }
 
-    .bolinha.verde    { background: #01ff56; }
+    .bolinha.verde    { background: #00cc44; }
     .bolinha.vermelho { background: red; }
     .bolinha.azul     { background: blue; }
-    .bolinha.amarelo  { background: #ffd900; }
+    .bolinha.amarelo  { background: #ffb700; }
   </style>
 </head>
 <body>
 
-  <h1>Genius</h1>
+  <h1>Sequência de Cores</h1>
 
   <div id="cores-container">
     <div id="verde" class="cor"></div>
@@ -181,4 +181,3 @@
 
 </body>
 </html>
-
