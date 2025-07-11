@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Sequência de Cores</title>
+  <style>
+    body {
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      color: white;
+      font-family: sans-serif;
+      padding-top: 30px;
+    }
+
+    .cor {
+      width: 150px;
+      height: 150px;
+      margin: 15px;
+      border-radius: 20px;
+      opacity: 0.4;
+      transition: 0.3s;
+    }
+
+    #verde   { background: green; }
+    #vermelho{ background: red; }
+    #azul    { background: blue; }
+    #amarelo { background: yellow; }
+
+    #start {
+      padding: 10px 30px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-size: 20px;
+    }
+
+    #cores-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    #sequenciaVisual {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .bolinha {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .bolinha.verde    { background: green; }
+    .bolinha.vermelho { background: red; }
+    .bolinha.azul     { background: blue; }
+    .bolinha.amarelo  { background: yellow; }
+  </style>
+</head>
+<body>
+
+  <h1>Genius</h1>
+  <div id="cores-container">
+    <div id="verde" class="cor"></div>
+    <div id="vermelho" class="cor"></div>
+    <div id="azul" class="cor"></div>
+    <div id="amarelo" class="cor"></div>
+  </div>
+
+  <button id="start">Iniciar</button>
+  <div id="status"></div>
+  <div id="sequenciaVisual"></div>
+
+  <script>
+    const cores = ['verde', 'vermelho', 'azul', 'amarelo'];
+
+    let sequencia = [];
+    let rodada = 0;
+    let intervaloEntreRodadas = 5000; // tempo entre rodadas (ms)
+    let tempoPorCor = 800;            // tempo que cada cor fica acesa
+
+    function piscar(cor) {
+      const el = document.getElementById(cor);
+      el.style.opacity = 1;
+      setTimeout(() => el.style.opacity = 0.4, tempoPorCor - 200);
+    }
+
+    function mostrarBolinhas() {
+      const visual = document.getElementById('sequenciaVisual');
+      visual.innerHTML = ''; // limpa antes de mostrar nova
+      sequencia.forEach(cor => {
+        const bolinha = document.createElement('div');
+        bolinha.classList.add('bolinha', cor);
+        visual.appendChild(bolinha);
+      });
+    }
+
+    function mostrarSequencia() {
+      document.getElementById('status').innerText = `Rodada ${rodada}`;
+      let i = 0;
+      const intervalo = setInterval(() => {
+        piscar(sequencia[i]);
+        i++;
+        if (i >= sequencia.length) {
+          clearInterval(intervalo);
+          mostrarBolinhas();
+          setTimeout(novaRodada, intervaloEntreRodadas);
+        }
+      }, tempoPorCor);
+    }
+
+    function novaRodada() {
+      rodada++; // incrementa rodada aqui apenas
+      const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+      sequencia.push(corAleatoria);
+      mostrarSequencia();
+    }
+
+    document.getElementById('start').addEventListener('click', () => {
+      rodada = 0;
+      sequencia = [];
+      document.getElementById('sequenciaVisual').innerHTML = '';
+      novaRodada();
+    });
+  </script>
+</body>
+</html>
