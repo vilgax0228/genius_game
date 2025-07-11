@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jogo de Cores</title>
   <style>
     * {
@@ -40,14 +40,20 @@
       width: 100%;
       height: 30vw;
       border-radius: 15px;
-      opacity: 0.4;
-      transition: opacity 0.2s;
+      filter: brightness(50%);
+      transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
     }
 
-    #verde   { background: green; }
+    .cor.ativa {
+      filter: brightness(100%);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px white;
+    }
+
+    #verde   { background: #00cc44; }  /* Verde vibrante */
     #vermelho{ background: red; }
     #azul    { background: blue; }
-    #amarelo { background: yellow; }
+    #amarelo { background: #e6c200; }  /* Amarelo com contraste */
 
     button {
       padding: 15px 30px;
@@ -80,15 +86,15 @@
       border: 2px solid white;
     }
 
-    .bolinha.verde    { background: green; }
+    .bolinha.verde    { background: #00cc44; }
     .bolinha.vermelho { background: red; }
     .bolinha.azul     { background: blue; }
-    .bolinha.amarelo  { background: yellow; }
+    .bolinha.amarelo  { background: #e6c200; }
   </style>
 </head>
 <body>
 
-  <h1>Sequência de Cores</h1>
+  <h1>Genius</h1>
 
   <div id="cores-container">
     <div id="verde" class="cor"></div>
@@ -108,17 +114,16 @@
 
     let sequencia = [];
     let rodada = 0;
-    let intervaloEntreRodadas = 3000;
+    let intervaloEntreRodadas = 5000;
     let tempoPorCor = 800;
 
     let intervaloAtivo = null;
     let timeoutRodada = null;
-    let jogoAtivo = false;
 
     function piscar(cor) {
       const el = document.getElementById(cor);
-      el.style.opacity = 1;
-      setTimeout(() => el.style.opacity = 0.4, tempoPorCor - 200);
+      el.classList.add('ativa');
+      setTimeout(() => el.classList.remove('ativa'), tempoPorCor - 200);
     }
 
     function mostrarBolinhas() {
@@ -153,24 +158,19 @@
     }
 
     function resetarJogo() {
-      // Cancela timers ativos
       clearInterval(intervaloAtivo);
       clearTimeout(timeoutRodada);
       intervaloAtivo = null;
       timeoutRodada = null;
 
-      // Limpa tudo
       rodada = 0;
       sequencia = [];
-      jogoAtivo = false;
-
       document.getElementById('status').innerText = 'Toque em "Iniciar"';
       document.getElementById('sequenciaVisual').innerHTML = '';
     }
 
     document.getElementById('start').addEventListener('click', () => {
-      resetarJogo(); // garante que esteja limpo
-      jogoAtivo = true;
+      resetarJogo();
       novaRodada();
     });
 
@@ -181,3 +181,4 @@
 
 </body>
 </html>
+
