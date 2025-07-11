@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogo de Cores</title>
   <style>
     * {
@@ -40,20 +40,14 @@
       width: 100%;
       height: 30vw;
       border-radius: 15px;
-      filter: brightness(50%);
-      transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+      opacity: 0.4;
+      transition: opacity 0.2s;
     }
 
-    .cor.ativa {
-      filter: brightness(100%);
-      transform: scale(1.05);
-      box-shadow: 0 0 20px white;
-    }
-
-    #verde   { background: #00cc44; }  /* Verde vibrante */
+    #verde   { background: green; }
     #vermelho{ background: red; }
     #azul    { background: blue; }
-    #amarelo { background: #ffd900; }  /* Amarelo com contraste */
+    #amarelo { background: yellow; }
 
     button {
       padding: 15px 30px;
@@ -86,10 +80,10 @@
       border: 2px solid white;
     }
 
-    .bolinha.verde    { background: #00cc44; }
+    .bolinha.verde    { background: green; }
     .bolinha.vermelho { background: red; }
     .bolinha.azul     { background: blue; }
-    .bolinha.amarelo  { background: #ffd900; }
+    .bolinha.amarelo  { background: yellow; }
   </style>
 </head>
 <body>
@@ -119,11 +113,12 @@
 
     let intervaloAtivo = null;
     let timeoutRodada = null;
+    let jogoAtivo = false;
 
     function piscar(cor) {
       const el = document.getElementById(cor);
-      el.classList.add('ativa');
-      setTimeout(() => el.classList.remove('ativa'), tempoPorCor - 200);
+      el.style.opacity = 1;
+      setTimeout(() => el.style.opacity = 0.4, tempoPorCor - 200);
     }
 
     function mostrarBolinhas() {
@@ -158,19 +153,24 @@
     }
 
     function resetarJogo() {
+      // Cancela timers ativos
       clearInterval(intervaloAtivo);
       clearTimeout(timeoutRodada);
       intervaloAtivo = null;
       timeoutRodada = null;
 
+      // Limpa tudo
       rodada = 0;
       sequencia = [];
+      jogoAtivo = false;
+
       document.getElementById('status').innerText = 'Toque em "Iniciar"';
       document.getElementById('sequenciaVisual').innerHTML = '';
     }
 
     document.getElementById('start').addEventListener('click', () => {
-      resetarJogo();
+      resetarJogo(); // garante que esteja limpo
+      jogoAtivo = true;
       novaRodada();
     });
 
