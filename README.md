@@ -1,2 +1,1 @@
-# genius_game
-
+Jogo do gênio
